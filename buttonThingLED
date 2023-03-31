@@ -1,0 +1,122 @@
+
+const int buttonPin = 10; 
+const int ledPin = 11;    
+const int buttonPin2 = 3;
+const int ledPin2 = 4;
+
+// Variables will change:
+int ledState = HIGH;        
+int buttonState;            
+int lastButtonState = LOW;  
+int ledState2 = HIGH;
+int buttonState2;
+int lastButtonState2 = LOW;
+
+
+unsigned long lastDebounceTime = 0;  
+unsigned long debounceDelay = 50;    
+unsigned long lastDebounceTime2 = 0;  
+unsigned long debounceDelay2 = 50;
+
+void setup() {
+  pinMode(buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin2, INPUT);
+  pinMode(ledPin, OUTPUT);
+
+  digitalWrite(ledPin, ledState);
+  digitalWrite(ledPin2, ledState2);
+}
+
+
+//void fun1() {
+  //print("foo");
+//}
+
+//void fun2(char *msg) {
+  //print(msg);
+//}
+//void fun3() {
+  //fun1();
+  //fun2("bar");
+  //print("baz");
+//}
+
+int flickerState = HIGH;
+int flickerCounter = 0;
+int flickerState2 = HIGH;
+int flickerCounter2 = 0;
+void loop() {
+
+  int reading = digitalRead(buttonPin);
+  int reading2 = digitalRead(buttonPin2);
+
+  
+
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    
+
+    if (reading != buttonState) {
+      buttonState = reading;
+
+      if (buttonState == HIGH) {
+        ledState = !ledState;
+      }
+    }
+  }
+
+  if (ledState == HIGH) {
+    digitalWrite(ledPin, flickerState); 
+    flickerCounter += 1; // turn the LED on (HIGH is the voltage level)
+    
+    if (flickerCounter == 100) {
+      flickerCounter = 0;
+      flickerState = !flickerState;
+    }   // turn the LED off by making the voltage LOW
+  }
+  
+  
+  // save the reading. Next time through the loop, it'll be the lastButtonState:
+  lastButtonState = reading;
+
+
+  //---------------------------------------------------------------------------------------------------------------
+  //SECOND BUTTON                                                                                                 |
+  //---------------------------------------------------------------------------------------------------------------
+  Serial.println("Reading for second button: ");
+  Serial.println(reading2);
+  if (reading2 != lastButtonState2) {
+    lastDebounceTime2 = millis();
+  }
+
+  if ((millis() - lastDebounceTime2) > debounceDelay2) {
+    
+    if (reading2 != buttonState2) {
+      buttonState2 = reading2;
+
+      if (buttonState2 == HIGH) {
+        ledState2 = !ledState2;
+      }
+    }
+  }
+
+  if (ledState2 == HIGH) {
+    digitalWrite(ledPin2, flickerState2); 
+    flickerCounter2 += 1; 
+    
+    if (flickerCounter2 == 100) {
+      flickerCounter2 = 0;
+      flickerState2 = !flickerState2;
+    }   
+  }
+  
+  
+  lastButtonState2 = reading2;
+
+
+
+}
